@@ -1,6 +1,7 @@
 # SeuratObject 5.4.0
 
 ## Changes:
+- Add `StitchMatrix.DelayedMatrix` so multi-layer `DelayedMatrix` (DelayedArray/HDF5Array) assays can be joined (`JoinLayers`), mirroring the existing `IterableMatrix` (BPCells) method ([satijalab/seurat#9798](https://github.com/satijalab/seurat/issues/9798))
 - Add setter method `DefaultDimReduc<-` to enable users to specify a default dimensional reduction for object interaction and visualization ([#268](https://github.com/satijalab/seurat-object/pull/268))
 - Add option to specify `assay` in `FetchData.Seurat` ([#278](https://github.com/satijalab/seurat-object/pull/278))
 - Update ability to create cropped FOVs from Visium V2 images via new internal method `.CropVisiumV2` ([#279](https://github.com/satijalab/seurat-object/pull/279), [#289](https://github.com/satijalab/seurat-object/pull/289))
