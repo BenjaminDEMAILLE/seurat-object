@@ -122,24 +122,6 @@ this function. For more details about \pkg{progressr}, please read
 \href{https://progressr.futureverse.org/articles/progressr-01-intro.html}{\code{vignette("progressr-intro")}}
 }
 
-\section{Parallelization with \pkg{future}}{
-
-The following methods use
-\href{https://cran.r-project.org/package=future}{\pkg{future}} to enable
-parallelization:
-\itemize{
- \item \code{RenameCells}
-}
-Parallelization strategies can be set using
-\code{\link[future]{plan}}. Common plans include \dQuote{\code{sequential}}
-for non-parallelized processing or \dQuote{\code{multisession}} for parallel
-evaluation using multiple \R sessions; for other plans, see the
-\dQuote{Implemented evaluation strategies} section of
-\code{\link[future:plan]{?future::plan}}. For a more thorough introduction
-to \pkg{future}, see
-\href{https://future.futureverse.org/articles/future-1-overview.html}{\code{vignette("future-1-overview")}}
-}
-
 \seealso{
 \code{\link{Segmentation-class}}
 
@@ -151,5 +133,4 @@ Segmentation layer classes:
 \code{\link{Segmentation-class}},
 \code{\link{Segmentation-validity}}
 }
-\concept{future}
 \concept{segmentation}
