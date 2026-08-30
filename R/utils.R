@@ -2508,6 +2508,57 @@ t.spam <- spam::t
   return(classes)
 }
 
+#' Move Every File Backing a Layer
+#'
+#' \code{\link{.FilePath}} encodes several backing paths for one layer as a
+#' single comma-separated string, and \code{\link{LoadSeuratRds}} splits on
+#' that separator when reopening. Moving has to understand the same encoding:
+#' handing the joined string to \code{.FileMove} looks for a directory whose
+#' name literally contains a comma. Repeated paths are moved once and reused,
+#' since a joined BPCells matrix commonly references one store several times.
+#'
+#' @param path A single cached path entry, possibly comma-separated
+#' @param new_path Destination directory
+#'
+#' @return \code{path} with each component replaced by its new location,
+#' comma-separated in the original order
+#'
+#' @keywords internal
+#'
+#' @noRd
+#'
+.FileMoveAll <- function(path, new_path) {
+  parts <- unlist(x = strsplit(x = path, split = ','))
+  moved <- setNames(object = character(length = 0L), nm = character(length = 0L))
+  for (part in unique(x = parts)) {
+    moved[[part]] <- as.character(x = .FileMove(path = part, new_path = new_path))
+  }
+  return(paste(moved[parts], collapse = ','))
+}
+
+#' Make Every Path Backing a Layer Relative
+#'
+#' The comma-separated companion to \code{fs::path_rel}, matching the encoding
+#' used by \code{\link{.FilePath}} and understood by
+#' \code{\link{LoadSeuratRds}}.
+#'
+#' @param path A single cached path entry, possibly comma-separated
+#' @param start Directory to make the paths relative to
+#'
+#' @return \code{path} with each component made relative to \code{start}
+#'
+#' @keywords internal
+#'
+#' @noRd
+#'
+.PathRelAll <- function(path, start) {
+  parts <- unlist(x = strsplit(x = path, split = ','))
+  return(paste(
+    as.character(x = fs::path_rel(path = parts, start = start)),
+    collapse = ','
+  ))
+}
+
 #' Get English Vowels
 #'
 #' @return A vector with English vowels in lower case

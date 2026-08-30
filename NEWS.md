@@ -1,6 +1,7 @@
 # Unreleased
 
 ## Changes:
+- Fix `SaveSeuratRds` failing with `Can't find path` on an object whose on-disk layers have been joined: `.FilePath` encodes a layer's several backing stores as one comma-separated string, which `LoadSeuratRds` already splits but the saving side passed through as a single path ([#283](https://github.com/satijalab/seurat-object/issues/283))
 - Replace `future_mapply` with `mapply` in `RenameCells.Segmentation` for improved performance ([#294](https://github.com/satijalab/seurat-object/pull/294))
 
 # SeuratObject 5.4.0

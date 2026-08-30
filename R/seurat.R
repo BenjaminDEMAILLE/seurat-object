@@ -770,10 +770,7 @@ SaveSeuratRds <- function(
           class = 'sticky',
           amount = 0
         )
-        df[i, 'path'] <- as.character(x = .FileMove(
-          path = pth,
-          new_path = destdir
-        ))
+        df[i, 'path'] <- .FileMoveAll(path = pth, new_path = destdir)
       }
     }
     if (isTRUE(x = relative)) {
@@ -785,10 +782,13 @@ SaveSeuratRds <- function(
         class = 'sticky',
         amount = 0
       )
-      df$path <- as.character(x = fs::path_rel(
-        path = df$path,
+      df$path <- vapply(
+        X = df$path,
+        FUN = .PathRelAll,
+        FUN.VALUE = character(length = 1L),
+        USE.NAMES = FALSE,
         start = dirname(path = file)
-      ))
+      )
     }
     df$assay <- assay
     cache[[assay]] <- df
