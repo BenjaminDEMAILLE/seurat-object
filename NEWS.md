@@ -1,6 +1,7 @@
 # Unreleased
 
 ## Changes:
+- Fix `as(assay, "Assay")` and `assay[[]] <- ` failing with `subscript out of bounds` when a v5 assay has no feature-level metadata yet, e.g. before `FindVariableFeatures` has been run: an empty metadata frame was iterated with `1:ncol()`, which walks indices 1 and 0 ([satijalab/seurat#9138](https://github.com/satijalab/seurat/issues/9138))
 - Replace `future_mapply` with `mapply` in `RenameCells.Segmentation` for improved performance ([#294](https://github.com/satijalab/seurat-object/pull/294))
 
 # SeuratObject 5.4.0

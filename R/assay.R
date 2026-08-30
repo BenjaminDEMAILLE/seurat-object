@@ -1536,8 +1536,11 @@ setMethod(
     meta.data <- x[[]]
     feature.names <- rownames(x = meta.data)
     if (is.data.frame(x = value)) {
+      # seq_len, not 1:ncol: a data frame with no columns is a valid input here
+      # (an assay that has no feature-level metadata yet), and 1:0 would walk
+      # indices 1 and 0
       value <- lapply(
-        X = 1:ncol(x = value),
+        X = seq_len(length.out = ncol(x = value)),
         FUN = function(index) {
           v <- value[[index]]
           names(x = v) <- rownames(x = value)
