@@ -355,6 +355,11 @@ Images <- function(object, assay = NULL) {
 #'
 LoadSeuratRds <- function(file, ...) {
   object <- readRDS(file = file, ...)
+  rdsdir <- if (is_bare_character(x = file, n = 1L)) {
+    dirname(path = normalizePath(path = file, winslash = '/', mustWork = FALSE))
+  } else {
+    NULL
+  }
   cache <- Tool(object = object, slot = 'SaveSeuratRds')
   reqd.cols <- c('layer', 'path', 'class', 'pkg', 'fxn', 'assay')
   emit <- ifelse(
@@ -384,6 +389,16 @@ LoadSeuratRds <- function(file, ...) {
       emit(message = "Incorrect layer cache: none of the assays listed present")
       return(object)
     }
+    # Resolve the cached paths relative to the rds file; this keeps objects
+    # loadable after the rds and its on-disk stores have been moved together,
+    # and when relative paths are loaded from a different working directory
+    cache$path <- vapply(
+      X = cache$path,
+      FUN = .ResolveLayerPaths,
+      FUN.VALUE = character(length = 1L),
+      USE.NAMES = FALSE,
+      dir = rdsdir
+    )
     # Check the files
     exists <- vapply(
       X = cache$path,

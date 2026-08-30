@@ -2,6 +2,7 @@
 
 ## Changes:
 - Replace `future_mapply` with `mapply` in `RenameCells.Segmentation` for improved performance ([#294](https://github.com/satijalab/seurat-object/pull/294))
+- Fix `LoadSeuratRds` dropping on-disk (e.g. BPCells) layers when the object has been moved or shared: cached layer paths are now resolved relative to the rds file, so relative paths no longer depend on the working directory and absolute paths are still found when the store was moved alongside the rds ([satijalab/seurat#9798](https://github.com/satijalab/seurat/issues/9798))
 
 # SeuratObject 5.4.0
 

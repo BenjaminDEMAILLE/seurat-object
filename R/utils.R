@@ -2508,6 +2508,57 @@ t.spam <- spam::t
   return(classes)
 }
 
+#' Resolve Cached On-Disk Layer Paths
+#'
+#' Locate the on-disk store recorded for a layer by
+#' \code{\link{SaveSeuratRds}}. The recorded path is tried as-is first, so
+#' objects that have not moved keep loading exactly as before. When it no longer
+#' resolves, the path is retried relative to the directory holding the rds file,
+#' then by name within that directory. Together these recover the two ways a
+#' saved object stops finding its layers: a relative path loaded from a
+#' different working directory, and an absolute path whose store was moved
+#' alongside the rds
+#'
+#' @param path A single cached path entry; multiple paths for one layer are
+#' comma-separated
+#' @param dir Directory containing the rds file, or \code{NULL} when unknown
+#'
+#' @return \code{path} with every component that could be resolved replaced by
+#' the resolved location; unresolvable components are returned unchanged
+#'
+#' @keywords internal
+#'
+#' @noRd
+#'
+.ResolveLayerPaths <- function(path, dir = NULL) {
+  if (is.na(x = path) || !nzchar(x = path)) {
+    return(path)
+  }
+  paths <- unlist(x = strsplit(x = path, split = ','))
+  resolved <- vapply(
+    X = paths,
+    FUN = function(p) {
+      candidates <- p
+      if (!is.null(x = dir)) {
+        candidates <- c(
+          candidates,
+          file.path(dir, p),
+          file.path(dir, basename(path = p))
+        )
+      }
+      for (candidate in candidates) {
+        if (fs::is_file(path = candidate) || fs::dir_exists(path = candidate)) {
+          return(candidate)
+        }
+      }
+      return(p)
+    },
+    FUN.VALUE = character(length = 1L),
+    USE.NAMES = FALSE
+  )
+  return(paste(resolved, collapse = ','))
+}
+
 #' Get English Vowels
 #'
 #' @return A vector with English vowels in lower case
