@@ -746,7 +746,9 @@ RenameCells.Assay <- function(object, new.names = NULL, ...) {
   names(new.names) <- NULL
   for (data.slot in c("counts", "data", "scale.data")) {
     old.data <- GetAssayData(object = object, layer = data.slot)
-    if (ncol(x = old.data) <= 1) {
+    # Skip layers that hold nothing; a layer with a single cell still has a
+    # column name to replace
+    if (!ncol(x = old.data)) {
       next
     }
     colnames(x = slot(object = object, name = data.slot)) <- new.names

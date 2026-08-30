@@ -1504,7 +1504,21 @@ Misc.Assay5 <- .Misc
 #'
 RenameCells.StdAssay <- function(object, new.names = NULL, ...) {
   CheckDots(...)
-  colnames(object) <- new.names[colnames(object)]
+  # `new.names` is documented as a vector of new cell names, in order, and that
+  # is how RenameCells() is called from outside. It is also used internally with
+  # a vector named by the old cell names, as a lookup table. Support both: with
+  # an unnamed vector the lookup silently yields NA for every cell
+  if (is.null(x = names(x = new.names))) {
+    if (length(x = new.names) != ncol(x = object)) {
+      abort(message = paste0(
+        "'new.names' must have one entry per cell: ",
+        ncol(x = object), " expected, ", length(x = new.names), " provided"
+      ))
+    }
+    colnames(x = object) <- new.names
+  } else {
+    colnames(x = object) <- new.names[colnames(x = object)]
+  }
   return(object)
 }
 

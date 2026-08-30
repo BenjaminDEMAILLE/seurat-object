@@ -1,6 +1,7 @@
 # Unreleased
 
 ## Changes:
+- Fix `RenameCells` on a v5 assay returning `NA` for every cell when `new.names` is an unnamed vector, which is the documented form; and on a v3 assay silently leaving a single-cell assay unrenamed ([#39](https://github.com/satijalab/seurat-object/issues/39))
 - Replace `future_mapply` with `mapply` in `RenameCells.Segmentation` for improved performance ([#294](https://github.com/satijalab/seurat-object/pull/294))
 
 # SeuratObject 5.4.0
