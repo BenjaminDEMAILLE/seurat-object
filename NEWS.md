@@ -1,7 +1,7 @@
 # Unreleased
 
 ## Changes:
-- Fix `JoinLayers` failing with `Error: vector::reserve` when the combined layers hold more than 2^31 non-zero values: the per-layer counts were summed into a signed `int`, which overflowed to a negative number that was then passed to `std::vector::reserve`. The count is now 64-bit, and a total beyond what a `dgCMatrix` can index reports the limit and the available options instead ([satijalab/seurat#10009](https://github.com/satijalab/seurat/issues/10009))
+- Fix `JoinLayers` failing with `Error: vector::reserve` when the combined layers hold more than 2^31 non-zero values: the per-layer counts were summed into a signed `int`, which overflowed to a negative number that was then passed to `std::vector::reserve`. The count is now 64-bit, and a total beyond what a `dgCMatrix` can index reports the limit and points at the layer classes that are not bound by it instead ([satijalab/seurat#10009](https://github.com/satijalab/seurat/issues/10009))
 - Replace `future_mapply` with `mapply` in `RenameCells.Segmentation` for improved performance ([#294](https://github.com/satijalab/seurat-object/pull/294))
 
 # SeuratObject 5.4.0

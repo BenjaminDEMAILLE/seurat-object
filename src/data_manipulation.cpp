@@ -99,17 +99,21 @@ Eigen::SparseMatrix<double> RowMergeMatricesList(
   // set up tripletList for new matrix creation
   std::vector<T> tripletList;
   int num_rows = all_rownames.size();
-  // The result is a dgCMatrix, whose row indices and column pointers are 32-bit
-  // signed integers, so it cannot index more non-zeros than this. Say so plainly
-  // instead of failing inside the standard library.
+  // This routine returns a dgCMatrix, whose row indices and column pointers are
+  // 32-bit signed integers, so it cannot index more non-zeros than this. Other
+  // layer classes are stitched by their own StitchMatrix methods and are not
+  // subject to this limit, so point at them rather than failing inside the
+  // standard library.
   const int64_t max_nZero = 2147483647LL;
   if (num_nZero > max_nZero) {
     Rcpp::stop(
       "Cannot combine these layers: the result would have " +
       std::to_string(num_nZero) + " non-zero values, more than the " +
-      std::to_string(max_nZero) + " that R's sparse matrices (dgCMatrix) can "
-      "index. Keep the layers split, subset to fewer cells or features, or "
-      "store the data with an on-disk backend such as BPCells."
+      std::to_string(max_nZero) + " that a dgCMatrix can index. Convert the "
+      "layers to a matrix class that is not bound by that limit, then join "
+      "them again: Seurat's as.DelayedMatrix() keeps them in memory, and "
+      "BPCells keeps them on disk. Subsetting to fewer cells or features, or "
+      "leaving the layers split, also avoids it."
     );
   }
   tripletList.reserve(static_cast<size_t>(num_nZero));
