@@ -193,7 +193,9 @@ CellsByIdentities <- function(
   cells.idents <- sapply(
     X = idents,
     FUN = function(i) {
-      return(cells[as.vector(x = Idents(object = object)[cells]) == i])
+      # which() rather than the logical vector directly: comparing an NA
+      # identity with `i` gives NA, which would index an NA into every group
+      return(cells[which(x = as.vector(x = Idents(object = object)[cells]) == i)])
     },
     simplify = FALSE,
     USE.NAMES = TRUE
