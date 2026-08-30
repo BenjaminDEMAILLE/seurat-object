@@ -84,3 +84,38 @@ test_that("LoadSeuratRds still loads an object that has not moved", {
     built$counts
   )
 })
+
+test_that("cached paths with several files are each resolved", {
+  skip_if_not_installed("fs")
+  # Some on-disk classes record more than one file per layer, comma-separated;
+  # each component has to be resolved independently
+  dir <- tempfile("multi")
+  dir.create(dir)
+  a <- file.path(dir, "part-a.bin")
+  b <- file.path(dir, "part-b.bin")
+  writeLines("a", a)
+  writeLines("b", b)
+
+  recorded <- paste("part-a.bin", "part-b.bin", sep = ",")
+  resolved <- SeuratObject:::.ResolveLayerPaths(recorded, dir = dir)
+  expect_identical(resolved, paste(file.path(dir, "part-a.bin"),
+                                   file.path(dir, "part-b.bin"), sep = ","))
+
+  # absolute paths whose files moved into `dir` resolve by basename
+  stale <- paste(file.path(tempfile("gone"), "part-a.bin"),
+                 file.path(tempfile("gone"), "part-b.bin"), sep = ",")
+  expect_identical(SeuratObject:::.ResolveLayerPaths(stale, dir = dir),
+                   paste(a, b, sep = ","))
+
+  # a component that exists as recorded is left exactly as it was
+  expect_identical(SeuratObject:::.ResolveLayerPaths(a, dir = dir), a)
+
+  # unresolvable input is returned unchanged rather than mangled
+  missing <- file.path(tempfile("nowhere"), "absent.bin")
+  expect_identical(SeuratObject:::.ResolveLayerPaths(missing, dir = dir), missing)
+
+  # degenerate inputs
+  expect_identical(SeuratObject:::.ResolveLayerPaths(NA_character_, dir = dir), NA_character_)
+  expect_identical(SeuratObject:::.ResolveLayerPaths("", dir = dir), "")
+  expect_identical(SeuratObject:::.ResolveLayerPaths("part-a.bin", dir = NULL), "part-a.bin")
+})
