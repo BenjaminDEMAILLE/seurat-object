@@ -2,6 +2,7 @@
 
 ## Changes:
 - Replace `future_mapply` with `mapply` in `RenameCells.Segmentation` for improved performance ([#294](https://github.com/satijalab/seurat-object/pull/294))
+- Fixed adding feature-level meta data to a v5 assay from an unnamed vector, which was named by its own values and then rejected with "No feature overlap between new meta data and assay" ([#125](https://github.com/satijalab/seurat-object/issues/125))
 
 # SeuratObject 5.4.0
 
