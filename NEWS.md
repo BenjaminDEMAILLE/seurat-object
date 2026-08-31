@@ -1,6 +1,7 @@
 # Unreleased
 
 ## Changes:
+- Duplicate feature or cell names now report which names are repeated and to use `make.unique()`, rather than failing with `invalid class "LogMap" object: Duplicate rownames not allowed` ([#179](https://github.com/satijalab/seurat-object/issues/179))
 - Replace `future_mapply` with `mapply` in `RenameCells.Segmentation` for improved performance ([#294](https://github.com/satijalab/seurat-object/pull/294))
 
 # SeuratObject 5.4.0

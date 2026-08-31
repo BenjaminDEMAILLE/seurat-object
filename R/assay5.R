@@ -398,8 +398,8 @@ CreateAssay5Object <- function(
     Class = type,
     layers = list(),
     default = 0L,
-    features = LogMap(y = features.all),
-    cells = LogMap(y = cells.all),
+    features = LogMap(y = features.all, what = 'features'),
+    cells = LogMap(y = cells.all, what = 'cell names'),
     meta.data = EmptyDF(n = length(x = features.all)),
     misc = list(calcN = calcN_option %||% TRUE),
     ...
@@ -2920,8 +2920,8 @@ setAs(
     # Initialize the new object
     to <- new(
       Class = 'Assay5',
-      cells = LogMap(y = colnames(x = from)),
-      features = LogMap(y = rownames(x = from)),
+      cells = LogMap(y = colnames(x = from), what = 'cell names'),
+      features = LogMap(y = rownames(x = from), what = 'features'),
       assay.orig = DefaultAssay(object = from) %||% character(length = 0L),
       meta.data = EmptyDF(n = nrow(x = from)),
       key = Key(object = from)
