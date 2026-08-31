@@ -1,6 +1,7 @@
 # Unreleased
 
 ## Changes:
+- `CreateSegmentation` now names the cells responsible when coordinates contain `NA`, instead of reporting only `NA values in coordinates`, and reports cells with fewer than four boundary points once by name rather than emitting an anonymous `sp` warning per polygon ([satijalab/seurat#9069](https://github.com/satijalab/seurat/issues/9069), [satijalab/seurat#8812](https://github.com/satijalab/seurat/issues/8812))
 - Replace `future_mapply` with `mapply` in `RenameCells.Segmentation` for improved performance ([#294](https://github.com/satijalab/seurat-object/pull/294))
 
 # SeuratObject 5.4.0
