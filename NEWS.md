@@ -1,6 +1,7 @@
 # Unreleased
 
 ## Changes:
+- Fix `LogSeuratCommand` recording the name of an intervening base wrapper, such as `withCallingHandlers`, instead of the function that was called; and recording the wrong name when `do.call` is not the outermost frame ([#215](https://github.com/satijalab/seurat-object/issues/215))
 - Replace `future_mapply` with `mapply` in `RenameCells.Segmentation` for improved performance ([#294](https://github.com/satijalab/seurat-object/pull/294))
 
 # SeuratObject 5.4.0
