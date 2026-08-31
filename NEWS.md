@@ -1,6 +1,7 @@
 # Unreleased
 
 ## Changes:
+- `Idents<-` now warns when given a single string that is not a meta data column, instead of silently relabelling every cell with it; wrap the value in `I()` to set a literal identity without the warning ([#232](https://github.com/satijalab/seurat-object/issues/232))
 - Replace `future_mapply` with `mapply` in `RenameCells.Segmentation` for improved performance ([#294](https://github.com/satijalab/seurat-object/pull/294))
 
 # SeuratObject 5.4.0
