@@ -5610,7 +5610,10 @@ setValidity(
       valid <- c(valid, "cell names may not be duplicated")
     }
     # TODO: Check assays
-    if (!IsNamedList(x = slot(object = object, name = 'assays'))) {
+    # pass.zero, as for every other list slot below: an object with no assays
+    # yet is empty, not malformed, and it is what `new()` builds from the
+    # prototype -- so without this the class cannot be constructed or extended
+    if (!IsNamedList(x = slot(object = object, name = 'assays'), pass.zero = TRUE)) {
       valid <- c(valid, "'assays' must be a named list")
     } else {
       for (assay in Assays(object = object)) {

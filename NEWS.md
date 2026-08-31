@@ -1,6 +1,7 @@
 # Unreleased
 
 ## Changes:
+- Fix `new("Seurat")` and classes that `contains = "Seurat"` failing validation with `'assays' must be a named list`: the `assays` slot was the only list slot not validated with `pass.zero = TRUE`, so an object with no assays yet, which is what `new()` builds from the prototype, was treated as malformed ([#227](https://github.com/satijalab/seurat-object/issues/227))
 - Replace `future_mapply` with `mapply` in `RenameCells.Segmentation` for improved performance ([#294](https://github.com/satijalab/seurat-object/pull/294))
 
 # SeuratObject 5.4.0
