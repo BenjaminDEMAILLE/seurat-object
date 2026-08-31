@@ -2179,8 +2179,9 @@ merge.StdAssay <- function(
 #' @param add.cell.ids A character vector equal to the number of objects
 #' provided to append to all cell names; if \code{TRUE}, uses \code{labels} as
 #' \code{add.cell.ids}
-#' @param collapse If \code{TRUE}, merge layers of the same name together; if
-#' \code{FALSE}, appends \code{labels} to the layer name
+#' @param collapse Not yet implemented: \code{TRUE} raises an error. When
+#' implemented, will merge layers of the same name together; \code{FALSE},
+#' the default, appends \code{labels} to the layer name
 #'
 #' @return A new v5 assay with data merged from \code{c(x, y)}
 #'

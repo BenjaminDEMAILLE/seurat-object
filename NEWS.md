@@ -1,6 +1,7 @@
 # Unreleased
 
 ## Changes:
+- Document that `merge(collapse = TRUE)` is not implemented and raises an error, rather than describing it as if it worked ([#175](https://github.com/satijalab/seurat-object/issues/175))
 - Replace `future_mapply` with `mapply` in `RenameCells.Segmentation` for improved performance ([#294](https://github.com/satijalab/seurat-object/pull/294))
 
 # SeuratObject 5.4.0
