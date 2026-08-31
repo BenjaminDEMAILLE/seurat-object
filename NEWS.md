@@ -2,6 +2,7 @@
 
 ## Changes:
 - Replace `future_mapply` with `mapply` in `RenameCells.Segmentation` for improved performance ([#294](https://github.com/satijalab/seurat-object/pull/294))
+- Fixed `Key` failing with "values must be length 1" on an object that holds an assay, reduction or image with no key, which took down `FetchData` and everything that plots ([#41](https://github.com/satijalab/seurat-object/issues/41))
 
 # SeuratObject 5.4.0
 
