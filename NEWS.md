@@ -2,6 +2,7 @@
 
 ## Changes:
 - Replace `future_mapply` with `mapply` in `RenameCells.Segmentation` for improved performance ([#294](https://github.com/satijalab/seurat-object/pull/294))
+- `WhichCells` now names the variables in an `expression` that the object does not have, instead of reporting "None of the requested variables were found: " with nothing after the colon
 
 # SeuratObject 5.4.0
 

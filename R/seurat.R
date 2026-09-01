@@ -2879,6 +2879,16 @@ WhichCells.Seurat <- function(
         expr.char %in% colnames(x = object[[]]) |
         grepl(pattern = key.pattern, x = expr.char, perl = TRUE)
     )
+    if (!length(x = vars.use)) {
+      # FetchData() would be asked for nothing, and report that none of the
+      # requested variables were found without naming any
+      abort(message = paste0(
+        "None of the names in the expression are in the object: ",
+        paste(sQuote(x = expr.char, q = FALSE), collapse = ", "),
+        ". They have to be features, meta data columns, or start with the key ",
+        "of a reduction"
+      ))
+    }
     data.subset <- FetchData(
       object = object,
       vars = unique(x = expr.char[vars.use]),
