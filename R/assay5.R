@@ -1381,9 +1381,36 @@ LayerData.Assay5 <- LayerData.StdAssay
       cells
     }
     if (!identical(x = fcheck, y = Features(x = object, layer = layer))) {
+      # Features the assay does not know about were dropped above. Replacing a
+      # layer with data whose features differ therefore stores fewer rows than
+      # were handed over, and the assay goes on advertising features the layer
+      # can no longer supply, so name what is being lost rather than only
+      # noting that something differs
+      dropped <- if (is.character(x = fcheck)) {
+        setdiff(x = attr(x = value, which = 'features') %||% character(), y = fcheck)
+      } else {
+        character()
+      }
       warning(
         "Different features in new layer data than already exists for ",
         layer,
+        if (length(x = dropped)) {
+          paste0(
+            "; ", length(x = dropped),
+            ifelse(test = length(x = dropped) == 1L, yes = " feature is", no = " features are"),
+            " not in the assay and the data supplied for ",
+            ifelse(test = length(x = dropped) == 1L, yes = "it", no = "them"),
+            " was discarded: ",
+            paste(sQuote(x = utils::head(x = dropped, n = 5L)), collapse = ", "),
+            ifelse(
+              test = length(x = dropped) > 5L,
+              yes = paste0(", and ", length(x = dropped) - 5L, " more"),
+              no = ""
+            )
+          )
+        } else {
+          ""
+        },
         call. = FALSE,
         immediate. = TRUE
       )
