@@ -479,7 +479,18 @@ HVFInfo.Assay <- function(
   )
   colnames(x = hvf.info) <- vars
   if (status) {
-    hvf.info$variable <- object[[paste0(method, '.variable')]]
+    status.column <- paste0(method, '.variable')
+    if (!status.column %in% colnames(x = object[[]])) {
+      abort(message = paste0(
+        "Unable to find highly variable feature information for method '",
+        method, "': the assay has no ", sQuote(x = status.column, q = FALSE),
+        " column. Run FindVariableFeatures(selection.method = '", method,
+        "') first"
+      ))
+    }
+    # drop, otherwise the column is a one-column data frame and anything that
+    # sorts or subsets on it fails with "cannot xtfrm data frames"
+    hvf.info$variable <- object[[status.column, drop = TRUE]]
   }
   return(hvf.info)
 }
@@ -878,9 +889,9 @@ SpatiallyVariableFeatures.Assay <- function(
     method <- selection.method
   }
   vf <- SVFInfo(object = object, method = method, status = TRUE)
-  vf <- vf[rownames(vf)[which(vf[, "variable"][, 1])], ]
+  vf <- vf[rownames(vf)[which(x = vf[["variable"]])], ]
   if (!is.null(x = decreasing)) {
-    vf <- vf[order(vf[, "rank"][, 1], decreasing = !decreasing), ]
+    vf <- vf[order(vf[["rank"]], decreasing = !decreasing), ]
   }
   return(rownames(vf))
 }
@@ -933,8 +944,21 @@ SVFInfo.Assay <- function(
   )
   colnames(x = svf.info) <- vars
   if (status) {
-    svf.info$variable <- object[[paste0(method, ".spatially.variable")]]
-    svf.info$rank <- object[[paste0(method, ".spatially.variable.rank")]]
+    status.columns <- paste0(method, c(".spatially.variable", ".spatially.variable.rank"))
+    missing <- setdiff(x = status.columns, y = colnames(x = object[[]]))
+    if (length(x = missing)) {
+      # otherwise the lookup fails with "undefined columns selected", which
+      # says nothing about what has not been run
+      abort(message = paste0(
+        "Unable to find spatially variable feature information for method '",
+        method, "': the assay has no ", paste(sQuote(x = missing, q = FALSE), collapse = " or "),
+        " column. Run FindSpatiallyVariableFeatures(selection.method = '",
+        method, "') first"
+      ))
+    }
+    # drop, as for HVFInfo() above
+    svf.info$variable <- object[[status.columns[1L], drop = TRUE]]
+    svf.info$rank <- object[[status.columns[2L], drop = TRUE]]
   }
   return(svf.info)
 }
@@ -964,7 +988,7 @@ VariableFeatures.Assay <- function(
       method = method,
       status = TRUE
     )
-    return(rownames(x = vf)[which(x = vf[, "variable"][, 1])])
+    return(rownames(x = vf)[which(x = vf[["variable"]])])
   }
   return(slot(object = object, name = 'var.features'))
 }
