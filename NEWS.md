@@ -6,6 +6,7 @@
 - Replace `future_mapply` with `mapply` in `RenameCells.Segmentation` for improved performance ([#294](https://github.com/satijalab/seurat-object/pull/294))
 - Fixed adding feature-level meta data to a v5 assay from an unnamed vector, which was named by its own values and then rejected with "No feature overlap between new meta data and assay" ([#125](https://github.com/satijalab/seurat-object/issues/125))
 - Fixed `Key` failing with "values must be length 1" on an object that holds an assay, reduction or image with no key, which took down `FetchData` and everything that plots ([#41](https://github.com/satijalab/seurat-object/issues/41))
+- Adding cell-level meta data from an unnamed vector whose length is neither one nor the number of cells is now an error; it was recycled silently, so cells were given values belonging to other cells
 
 # SeuratObject 5.4.0
 

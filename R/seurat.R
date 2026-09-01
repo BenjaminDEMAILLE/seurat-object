@@ -4737,7 +4737,16 @@ setMethod(
     }
     # Add a column of cell-level meta data
     if (is.null(x = names(x = value))) {
-      # Handle cases where new meta data is unnamed
+      # Handle cases where new meta data is unnamed. Only a single value is
+      # recycled: any other length is a mismatch, and recycling it silently
+      # gives cells values that belong to other cells
+      if (length(x = value) != 1L && length(x = value) != ncol(x = x)) {
+        abort(message = paste0(
+          "Cannot add ", length(x = value), " values as meta data for ",
+          ncol(x = x), " cells. Give one value per cell, in the object's cell ",
+          "order, or name the values by cell"
+        ))
+      }
       value <- rep_len(x = value, length.out = ncol(x = x))
       names(x = value) <- colnames(x = x)
     } else {
@@ -5237,7 +5246,16 @@ setMethod(
     }
     # Add a column of cell-level meta data
     if (is.null(x = names(x = value))) {
-      # Handle cases where new meta data is unnamed
+      # Handle cases where new meta data is unnamed. Only a single value is
+      # recycled: any other length is a mismatch, and recycling it silently
+      # gives cells values that belong to other cells
+      if (length(x = value) != 1L && length(x = value) != ncol(x = x)) {
+        abort(message = paste0(
+          "Cannot add ", length(x = value), " values as meta data for ",
+          ncol(x = x), " cells. Give one value per cell, in the object's cell ",
+          "order, or name the values by cell"
+        ))
+      }
       value <- rep_len(x = value, length.out = ncol(x = x))
       names(x = value) <- colnames(x = x)
     } else {
