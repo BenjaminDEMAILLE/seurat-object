@@ -4,6 +4,7 @@
 - `CreateSegmentation` now names the cells responsible when coordinates contain `NA`, instead of reporting only `NA values in coordinates`, and reports cells with fewer than four boundary points once by name rather than emitting an anonymous `sp` warning per polygon ([satijalab/seurat#9069](https://github.com/satijalab/seurat/issues/9069), [satijalab/seurat#8812](https://github.com/satijalab/seurat/issues/8812))
 - `Idents<-` now warns when given a single string that is not a meta data column, instead of silently relabelling every cell with it; wrap the value in `I()` to set a literal identity without the warning ([#232](https://github.com/satijalab/seurat-object/issues/232))
 - Duplicate feature or cell names now report which names are repeated and to use `make.unique()`, rather than failing with `invalid class "LogMap" object: Duplicate rownames not allowed` ([#179](https://github.com/satijalab/seurat-object/issues/179))
+- Document that `merge(collapse = TRUE)` is not implemented and raises an error, rather than describing it as if it worked ([#175](https://github.com/satijalab/seurat-object/issues/175))
 - Replace `future_mapply` with `mapply` in `RenameCells.Segmentation` for improved performance ([#294](https://github.com/satijalab/seurat-object/pull/294))
 
 # SeuratObject 5.4.0
