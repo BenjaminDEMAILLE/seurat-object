@@ -350,9 +350,7 @@ FetchData.Assay <- function(
   layer <- match.arg(arg = layer, choices = c('counts', 'data', 'scale.data'))
   # Identify cells to use
   cells <- cells %||% colnames(x = object)
-  if (is.numeric(x = cells)) {
-    cells <- colnames(x = object)[cells]
-  }
+  cells <- .CellSelection(cells = cells, all = colnames(x = object))
   cells.orig <- cells
   cells <- intersect(x = cells, y = colnames(x = object))
   if (length(x = cells) != length(x = cells.orig)) {

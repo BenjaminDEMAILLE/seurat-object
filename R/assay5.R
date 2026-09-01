@@ -740,9 +740,7 @@ FetchData.StdAssay <- function(
 
   # Identify cells to use
   cells <- cells %||% colnames(x = object)
-  if (is.numeric(x = cells)) {
-    cells <- colnames(x = object)[cells]
-  }
+  cells <- .CellSelection(cells = cells, all = colnames(x = object))
   cells <- intersect(x = cells, y = colnames(x = object))
   if (!length(x = cells)) {
     abort(message = "None of the cells requested found in this assay")
@@ -1187,9 +1185,7 @@ LayerData.StdAssay <- function(
     Cells(x = object, layer = layer)
   )
   cells <- cells %||% dnames[[2L]]
-  if (is.numeric(x = cells)) {
-    cells <- dnames[[2L]][cells]
-  }
+  cells <- .CellSelection(cells = cells, all = dnames[[2L]])
   cells <- sort(x = MatchCells(
     new = dnames[[2L]],
     orig = cells,
@@ -2431,6 +2427,21 @@ subset.StdAssay <- function(
 ) {
   # define an inner function to validate the `cells` and `features` params
   .validate_param <- function(name, values, allowed) {
+    # a logical mask selects by position, the way `[` does; it has to be
+    # resolved before NAs are dropped, since dropping one shifts the rest
+    if (is.logical(x = values) && !all(is.na(x = values))) {
+      if (length(x = values) != length(x = allowed)) {
+        stop(
+          paste0(
+            "A logical selection must have one value per ",
+            sub(pattern = "s$", replacement = "", x = name), ": ",
+            length(x = values), " provided for ", length(x = allowed), " ", name
+          ),
+          call. = FALSE
+        )
+      }
+      values <- allowed[which(x = values)]
+    }
     # if `values` is null or contains only null values, keep all allowed values
     if (all(is.na(values))) {
       values <- allowed

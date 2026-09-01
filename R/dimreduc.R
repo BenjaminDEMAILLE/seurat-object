@@ -228,9 +228,7 @@ FetchData.DimReduc <- function(
   slot <- slot[1L]
   slot <- match.arg(arg = slot)
   cells <- cells %||% Cells(x = object)
-  if (is.numeric(x = cells)) {
-    cells <- Cells(x = object)[cells]
-  }
+  cells <- .CellSelection(cells = cells, all = Cells(x = object))
   pattern <- paste0('^(', Key(object = object), ')?[[:digit:]]+$')
   vars <- grep(pattern = pattern, x = vars, value = TRUE)
   if (!length(x = 'vars')) {
@@ -285,9 +283,7 @@ FetchData.DimReduc <- function(
   layer <- 'embeddings'
   layer <- arg_match0(arg = layer, values = 'embeddings')
   cells <- cells %||% Cells(x = object)
-  if (is.numeric(x = cells)) {
-    cells <- Cells(x = object)[cells]
-  }
+  cells <- .CellSelection(cells = cells, all = Cells(x = object))
   cells <- intersect(x = cells, y = Cells(x = object))
   if (!length(x = cells)) {
     abort(message = "None of the cells requested found in this dimensional reduction")
@@ -879,9 +875,7 @@ subset.DimReduc <- function(x, cells = NULL, features = NULL, ...) {
   slot(object = x, name = 'cell.embeddings') <- if (is.null(x = cells)) {
     new(Class = 'matrix')
   } else {
-    if (is.numeric(x = cells)) {
-      cells <- Cells(x = x)[cells]
-    }
+    cells <- .CellSelection(cells = cells, all = Cells(x = x))
     cells <- intersect(x = Cells(x = x), y = cells)
     if (length(x = cells) == 0) {
       stop("Cannot find cell provided", call. = FALSE)

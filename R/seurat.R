@@ -1627,9 +1627,7 @@ FetchData.Seurat <- function(
   clean <- arg_match0(arg = clean, values = c('all', 'ident', 'none', 'project'))
   # Find cells to use
   cells <- cells %||% colnames(x = object)
-  if (is.numeric(x = cells)) {
-    cells <- colnames(x = object)[cells]
-  }
+  cells <- .CellSelection(cells = cells, all = colnames(x = object))
   if (is.null(x = vars)) {
     return(data.frame(row.names = cells))
   }
@@ -2100,9 +2098,7 @@ Idents.Seurat <- function(object, ...) {
     abort(message = "'value' must be a factor or vector")
   }
   cells <- cells %||% names(x = value) %||% colnames(x = object)
-  if (is.numeric(x = cells)) {
-    cells <- colnames(x = object)[cells]
-  }
+  cells <- .CellSelection(cells = cells, all = colnames(x = object))
   cells <- intersect(x = cells, y = colnames(x = object))
   # cells <- match(x = cells, table = colnames(x = object))
   if (!length(x = cells)) {
@@ -2838,9 +2834,7 @@ WhichCells.Seurat <- function(
   }
   object <- UpdateSlots(object = object)
   cells <- cells %||% colnames(x = object)
-  if (is.numeric(x = cells)) {
-    cells <- colnames(x = object)[cells]
-  }
+  cells <- .CellSelection(cells = cells, all = colnames(x = object))
   cell.order <- cells
   if (!is.null(x = idents)) {
     if (any(!idents %in% levels(x = Idents(object = object)))) {
