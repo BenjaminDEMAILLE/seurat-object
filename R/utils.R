@@ -2278,6 +2278,41 @@ StitchMatrix.IterableMatrix <- function(x, y,  rowmap, colmap, ...) {
 }
 
 
+#' @method StitchMatrix DelayedMatrix
+#' @export
+#'
+StitchMatrix.DelayedMatrix <- function(x, y, rowmap, colmap, ...) {
+  on.exit(expr = CheckGC())
+  if (!is_bare_list(x = y)) {
+    y <- list(y)
+  }
+  rowmap <- droplevels(x = rowmap)
+  colmap <- droplevels(x = colmap)
+  stopifnot(ncol(rowmap) == length(y) + 1L)
+  stopifnot(ncol(colmap) == length(y) + 1L)
+  stopifnot(identical(x = colnames(x = rowmap), y = colnames(x = colmap)))
+  y <- c(list(x), y)
+  for (i in seq_along(along.with = y)) {
+    #expand matrix to the same size
+    missing_row <- setdiff(x = rownames(x = rowmap), y = rowmap[[i]])
+    if (length(x = missing_row) > 0) {
+      zero_i <- SparseEmptyMatrix(
+        nrow = length(x = missing_row),
+        ncol = ncol(x = y[[i]]),
+        colnames = colmap[[i]],
+        rownames = missing_row
+      )
+      zero_i <- DelayedArray::DelayedArray(seed = as(object = zero_i, Class = 'dgCMatrix'))
+      # DelayedArray's explicit array binders; bare rbind/cbind would resolve to
+      # base/S4Vectors dispatch (bindCOLS) unless BiocGenerics is attached
+      y[[i]] <- DelayedArray::arbind(y[[i]], zero_i)[rownames(rowmap), ]
+    }
+  }
+  m <- do.call(what = DelayedArray::acbind, args = y)
+  return(m)
+}
+
+
 #' @method StitchMatrix matrix
 #' @export
 #'

@@ -6,6 +6,7 @@
 - Replace `future_mapply` with `mapply` in `RenameCells.Segmentation` for improved performance ([#294](https://github.com/satijalab/seurat-object/pull/294))
 - Fixed `SaveSeuratRds` failing with "Can't find path:" on an object whose on-disk layers have been joined: the joined layer records several store paths in one entry, and each of them has to be moved ([#283](https://github.com/satijalab/seurat-object/issues/283))
 - Fix `LoadSeuratRds` dropping on-disk (e.g. BPCells) layers when the object has been moved or shared: cached layer paths are now resolved relative to the rds file, so relative paths no longer depend on the working directory and absolute paths are still found when the store was moved alongside the rds ([satijalab/seurat#9798](https://github.com/satijalab/seurat/issues/9798))
+- Add `StitchMatrix.DelayedMatrix` so multi-layer `DelayedMatrix` (DelayedArray/HDF5Array) assays can be joined (`JoinLayers`), mirroring the existing `IterableMatrix` (BPCells) method ([satijalab/seurat#9798](https://github.com/satijalab/seurat/issues/9798))
 
 # SeuratObject 5.4.0
 
