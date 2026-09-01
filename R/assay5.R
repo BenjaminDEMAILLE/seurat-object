@@ -3188,10 +3188,17 @@ setMethod(
     } else {
       # Add a single column of metadata
       if (is.null(x = names(x = value))) {
-        if (length(x = unique(x = value)) == 1) {
+        if (length(x = value) == nrow(x = x) &&
+            !all(value %in% Features(x = x, layer = NA))) {
+          # an unnamed vector as long as the assay has features is taken in
+          # feature order, as it is for an v3 assay and for cell-level meta data
+          names(x = value) <- Features(x = x, layer = NA)
+        } else if (length(x = unique(x = value)) == 1) {
           value <- rep_len(x = value, length.out = nrow(x = x))
           names(x = value) <- Features(x = x, layer = NA)
         } else {
+          # values that are themselves feature names, as VariableFeatures<-
+          # stores them
           names(x = value) <- value
         }
       }
@@ -3200,7 +3207,13 @@ setMethod(
         y = Features(x = x, layer = NA)
       )
       if (!length(x = names.intersect)) {
-        abort(message = "No feature overlap between new meta data and assay")
+        abort(message = paste0(
+          "No feature overlap between new meta data and assay. Feature-level ",
+          "meta data must either be named by features, be as long as the assay ",
+          "has features (", nrow(x = x), ") to be taken in feature order, or ",
+          "hold feature names; this is of length ", length(x = value),
+          " with no names"
+        ))
       }
       value <- value[names.intersect]
       df <- EmptyDF(n = nrow(x = x))

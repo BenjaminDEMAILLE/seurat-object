@@ -4,6 +4,7 @@
 - Fix `CellsByIdentities` returning `NA` entries inside every identity group, and inflating their sizes, when some cells have an `NA` identity ([#186](https://github.com/satijalab/seurat-object/issues/186))
 - `LayerData<-` now names the features whose data is discarded when replacing a layer, instead of only warning that the features differ ([#173](https://github.com/satijalab/seurat-object/issues/173))
 - Replace `future_mapply` with `mapply` in `RenameCells.Segmentation` for improved performance ([#294](https://github.com/satijalab/seurat-object/pull/294))
+- Fixed adding feature-level meta data to a v5 assay from an unnamed vector, which was named by its own values and then rejected with "No feature overlap between new meta data and assay" ([#125](https://github.com/satijalab/seurat-object/issues/125))
 
 # SeuratObject 5.4.0
 
