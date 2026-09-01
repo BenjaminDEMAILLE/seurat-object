@@ -7,6 +7,7 @@
 - Document that `merge(collapse = TRUE)` is not implemented and raises an error, rather than describing it as if it worked ([#175](https://github.com/satijalab/seurat-object/issues/175))
 - Replace `future_mapply` with `mapply` in `RenameCells.Segmentation` for improved performance ([#294](https://github.com/satijalab/seurat-object/pull/294))
 - `RenameCells` now says which names are repeated when the new names are not unique, instead of failing with "duplicate 'row.names' are not allowed" ([#256](https://github.com/satijalab/seurat-object/issues/256))
+- `WhichCells` now names the variables in an `expression` that the object does not have, instead of reporting "None of the requested variables were found: " with nothing after the colon
 
 # SeuratObject 5.4.0
 
