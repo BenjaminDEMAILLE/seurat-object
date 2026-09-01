@@ -2441,6 +2441,22 @@ RenameCells.Seurat <- function(
   new.cell.names <- setNames(all.cells, all.cells)
   new.cell.names[cells.to.rename] <- new.names
 
+  # Cell names have to be unique. Without this the frames renamed below are
+  # given duplicate row names, and the error names neither the cells nor the
+  # renaming: "duplicate 'row.names' are not allowed"
+  if (anyDuplicated(x = new.cell.names)) {
+    repeated <- unique(x = new.cell.names[duplicated(x = new.cell.names)])
+    abort(message = paste0(
+      "Renaming would give the same name to more than one cell. ",
+      length(x = repeated),
+      " name",
+      ifelse(test = length(x = repeated) == 1L, yes = " is", no = "s are"),
+      " repeated: ",
+      paste(sQuote(x = head(x = repeated, n = 5L), q = FALSE), collapse = ", "),
+      if (length(x = repeated) > 5L) ", ..." else ""
+    ))
+  }
+
   # rename the cell-level metadata first to rename colname()
   old.meta.data <- object[[]]
   row.names(x = old.meta.data) <- new.cell.names
