@@ -785,10 +785,9 @@ SaveSeuratRds <- function(
           class = 'sticky',
           amount = 0
         )
-        df[i, 'path'] <- as.character(x = .FileMove(
-          path = pth,
-          new_path = destdir
-        ))
+        # a layer joined from several on-disk matrices records all of their
+        # paths in one entry, and each of them has to be moved
+        df[i, 'path'] <- .FileMoveAll(path = pth, new_path = destdir)
       }
     }
     if (isTRUE(x = relative)) {

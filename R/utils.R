@@ -2362,6 +2362,33 @@ t.spam <- spam::t
   }
   return(franks)
 }
+#' Move Every Store a Layer Points At
+#'
+#' A layer joined from several on-disk matrices records their paths as one
+#' comma-separated entry, so moving it means moving each of them
+#'
+#' @param path A cached path entry, possibly comma-separated
+#' @param new_path Directory to move into
+#'
+#' @return The entry with every component replaced by its new location
+#'
+#' @keywords internal
+#'
+#' @noRd
+#'
+.FileMoveAll <- function(path, new_path) {
+  parts <- unlist(x = strsplit(x = path, split = ','))
+  moved <- vapply(
+    X = parts,
+    FUN = function(x) {
+      return(as.character(x = .FileMove(path = x, new_path = new_path)))
+    },
+    FUN.VALUE = character(length = 1L),
+    USE.NAMES = FALSE
+  )
+  return(paste(moved, collapse = ','))
+}
+
 
 #' Move Files and Directories
 #'
