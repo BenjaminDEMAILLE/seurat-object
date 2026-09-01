@@ -2,6 +2,7 @@
 
 ## Changes:
 - Replace `future_mapply` with `mapply` in `RenameCells.Segmentation` for improved performance ([#294](https://github.com/satijalab/seurat-object/pull/294))
+- `HVFInfo(status = TRUE)` and `SVFInfo(status = TRUE)` now return their status columns as vectors rather than as nested one-column data frames, so sorting or subsetting on them no longer fails with "cannot xtfrm data frames" ([satijalab/seurat#7422](https://github.com/satijalab/seurat/issues/7422))
 
 # SeuratObject 5.4.0
 

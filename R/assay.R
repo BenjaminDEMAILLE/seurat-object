@@ -479,7 +479,9 @@ HVFInfo.Assay <- function(
   )
   colnames(x = hvf.info) <- vars
   if (status) {
-    hvf.info$variable <- object[[paste0(method, '.variable')]]
+    # drop, otherwise the column is a one-column data frame and anything that
+    # sorts or subsets on it fails with "cannot xtfrm data frames"
+    hvf.info$variable <- object[[paste0(method, '.variable'), drop = TRUE]]
   }
   return(hvf.info)
 }
@@ -878,9 +880,9 @@ SpatiallyVariableFeatures.Assay <- function(
     method <- selection.method
   }
   vf <- SVFInfo(object = object, method = method, status = TRUE)
-  vf <- vf[rownames(vf)[which(vf[, "variable"][, 1])], ]
+  vf <- vf[rownames(vf)[which(x = vf[["variable"]])], ]
   if (!is.null(x = decreasing)) {
-    vf <- vf[order(vf[, "rank"][, 1], decreasing = !decreasing), ]
+    vf <- vf[order(vf[["rank"]], decreasing = !decreasing), ]
   }
   return(rownames(vf))
 }
@@ -933,8 +935,9 @@ SVFInfo.Assay <- function(
   )
   colnames(x = svf.info) <- vars
   if (status) {
-    svf.info$variable <- object[[paste0(method, ".spatially.variable")]]
-    svf.info$rank <- object[[paste0(method, ".spatially.variable.rank")]]
+    # drop, as for HVFInfo() above
+    svf.info$variable <- object[[paste0(method, ".spatially.variable"), drop = TRUE]]
+    svf.info$rank <- object[[paste0(method, ".spatially.variable.rank"), drop = TRUE]]
   }
   return(svf.info)
 }
@@ -964,7 +967,7 @@ VariableFeatures.Assay <- function(
       method = method,
       status = TRUE
     )
-    return(rownames(x = vf)[which(x = vf[, "variable"][, 1])])
+    return(rownames(x = vf)[which(x = vf[["variable"]])])
   }
   return(slot(object = object, name = 'var.features'))
 }
