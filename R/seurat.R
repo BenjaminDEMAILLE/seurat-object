@@ -2189,7 +2189,13 @@ Key.Seurat <- function(object, ...) {
         object = object,
         classes.keep = c('SpatialImage', 'KeyMixin')
       ),
-      FUN = \(x) Key(object = object[[x]]),
+      FUN = \(x) {
+        key <- Key(object = object[[x]])
+        # an object stored with no key at all, which objects made before keys
+        # were enforced still carry; NA is what the rest of the code expects
+        # for one, see the duplicate-key handling in `[[<-`
+        if (!length(x = key)) NA_character_ else key
+      },
       FUN.VALUE = character(length = 1L),
       USE.NAMES = TRUE
     )
