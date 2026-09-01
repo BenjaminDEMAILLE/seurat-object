@@ -734,6 +734,20 @@ Misc.Assay <- .Misc
 #' @method Misc<- Assay
 #'
 "Misc<-.Assay" <- `.Misc<-`
+#' @details
+#' \code{JoinLayers.Assay}: v3 assays hold a single counts, data and scale.data
+#' matrix rather than layers, so there is nothing to join and the assay is
+#' returned unchanged. This includes SCT assays, which stay v3 when merged; the
+#' error that used to come back instead named a class rather than saying so
+#'
+#' @rdname JoinLayers
+#' @method JoinLayers Assay
+#' @export
+#'
+JoinLayers.Assay <- function(object, layers = NULL, new = NULL, ...) {
+  return(object)
+}
+
 
 #' @param new.names vector of new cell names
 #'
