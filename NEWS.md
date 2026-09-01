@@ -5,6 +5,7 @@
 - `Idents<-` now warns when given a single string that is not a meta data column, instead of silently relabelling every cell with it; wrap the value in `I()` to set a literal identity without the warning ([#232](https://github.com/satijalab/seurat-object/issues/232))
 - Duplicate feature or cell names now report which names are repeated and to use `make.unique()`, rather than failing with `invalid class "LogMap" object: Duplicate rownames not allowed` ([#179](https://github.com/satijalab/seurat-object/issues/179))
 - Document that `merge(collapse = TRUE)` is not implemented and raises an error, rather than describing it as if it worked ([#175](https://github.com/satijalab/seurat-object/issues/175))
+- Fix `LogSeuratCommand` recording the name of an intervening base wrapper, such as `withCallingHandlers`, instead of the function that was called; and recording the wrong name when `do.call` is not the outermost frame ([#215](https://github.com/satijalab/seurat-object/issues/215))
 - Replace `future_mapply` with `mapply` in `RenameCells.Segmentation` for improved performance ([#294](https://github.com/satijalab/seurat-object/pull/294))
 - `RenameCells` now says which names are repeated when the new names are not unique, instead of failing with "duplicate 'row.names' are not allowed" ([#256](https://github.com/satijalab/seurat-object/issues/256))
 - `WhichCells` now names the variables in an `expression` that the object does not have, instead of reporting "None of the requested variables were found: " with nothing after the colon
