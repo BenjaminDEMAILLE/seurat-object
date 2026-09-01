@@ -2,6 +2,7 @@
 
 ## Changes:
 - Replace `future_mapply` with `mapply` in `RenameCells.Segmentation` for improved performance ([#294](https://github.com/satijalab/seurat-object/pull/294))
+- Subsetting a reduction now subsets the embedding of a stored UMAP model with it. The model was left describing the cells the reduction no longer has, so projecting a query onto a subset reference placed it against the wrong coordinates ([satijalab/seurat#10445](https://github.com/satijalab/seurat/issues/10445))
 
 # SeuratObject 5.4.0
 

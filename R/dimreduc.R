@@ -916,7 +916,43 @@ subset.DimReduc <- function(x, cells = NULL, features = NULL, ...) {
     Loadings(object = x, projected = TRUE)[features.projected, , drop = FALSE]
   }
   slot(object = x, name = 'jackstraw') <- new(Class = 'JackStrawData')
+  x <- .SubsetReductionModel(object = x)
   return(x)
+}
+
+# Keep a stored model in step with the cells the reduction has
+#
+# A UMAP built with `return.model = TRUE` keeps the embedding it was fit on in
+# `misc$model`. Subsetting the reduction left that untouched, so the model and
+# the reduction described different sets of cells, and projecting a query onto
+# the reduction placed it against the wrong coordinates without any warning
+#
+# @param object A DimReduc
+#
+# @return \code{object}, with any per-cell part of its model subset to the
+# cells the reduction has
+#
+# @keywords internal
+#
+# @noRd
+#
+.SubsetReductionModel <- function(object) {
+  model <- Misc(object = object, slot = 'model')
+  embedding <- model$embedding
+  if (is.null(x = embedding) || is.null(x = rownames(x = embedding))) {
+    return(object)
+  }
+  cells <- Cells(x = object)
+  if (identical(x = rownames(x = embedding), y = cells)) {
+    return(object)
+  }
+  keep <- intersect(x = cells, y = rownames(x = embedding))
+  if (!length(x = keep)) {
+    return(object)
+  }
+  model$embedding <- embedding[keep, , drop = FALSE]
+  Misc(object = object, slot = 'model') <- model
+  return(object)
 }
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
