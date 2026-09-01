@@ -7,6 +7,7 @@
 - Fixed adding feature-level meta data to a v5 assay from an unnamed vector, which was named by its own values and then rejected with "No feature overlap between new meta data and assay" ([#125](https://github.com/satijalab/seurat-object/issues/125))
 - Fixed `Key` failing with "values must be length 1" on an object that holds an assay, reduction or image with no key, which took down `FetchData` and everything that plots ([#41](https://github.com/satijalab/seurat-object/issues/41))
 - Adding cell-level meta data from an unnamed vector whose length is neither one nor the number of cells is now an error; it was recycled silently, so cells were given values belonging to other cells
+- Subsetting a reduction now subsets the embedding of a stored UMAP model with it. The model was left describing the cells the reduction no longer has, so projecting a query onto a subset reference placed it against the wrong coordinates ([satijalab/seurat#10445](https://github.com/satijalab/seurat/issues/10445))
 
 # SeuratObject 5.4.0
 
