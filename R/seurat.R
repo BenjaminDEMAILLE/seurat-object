@@ -2107,12 +2107,31 @@ Idents.Seurat <- function(object, ...) {
     warn(message = 'Cannot find cells provided')
     return(object)
   }
-  idents.new <- if (length(x = value) == 1 && value %in% names(x = object[[]])) {
+  # I() marks a value as a literal identity, so a string that happens to match a
+  # meta data column is still used as itself
+  literal <- inherits(x = value, what = 'AsIs')
+  idents.new <- if (!literal &&
+                    length(x = value) == 1 &&
+                    value %in% names(x = object[[]])) {
     # unlist(x = object[[value]], use.names = FALSE)[cells]
     object[[value, drop = TRUE]][cells]
   } else {
     if (is.list(x = value)) {
       value <- unlist(x = value, use.names = FALSE)
+    }
+    # A bare string that is not a meta data column is usually meant to be one.
+    # Recycling it silently replaces every identity, which looks like a
+    # successful grouping until the levels are inspected
+    if (!literal &&
+        length(x = value) == 1L &&
+        is.character(x = value) &&
+        length(x = cells) > 1L) {
+      warn(message = paste0(
+        sQuote(x = value), " is not a column of this object's meta data, so ",
+        "every cell has been given it as its identity. Use ",
+        "`Idents(object) <- I(", encodeString(x = value, quote = '"'), ")` ",
+        "to set a literal identity without this warning."
+      ))
     }
     rep_len(x = value, length.out = length(x = cells))
   }
