@@ -52,3 +52,33 @@ test_that("variable features are still selected from the status column", {
   assay[["vst.variable"]] <- features %in% features[3:6]
   expect_identical(VariableFeatures(assay, method = "vst"), features[3:6])
 })
+
+# Asking for information that was never computed reached the meta data with a
+# column name it does not have: "undefined columns selected"
+test_that("information that was never computed is reported as such", {
+  assay <- build_assay()
+  expect_error(
+    SVFInfo(assay, method = "markvariogram", status = TRUE),
+    "Unable to find spatially variable feature information"
+  )
+  expect_error(
+    SVFInfo(assay, method = "markvariogram", status = TRUE),
+    "Run FindSpatiallyVariableFeatures"
+  )
+  expect_error(
+    SpatiallyVariableFeatures(assay, method = "moransi"),
+    "Unable to find spatially variable feature information"
+  )
+})
+
+test_that("half-written information is reported as such", {
+  assay <- build_assay()
+  features <- rownames(assay)
+  # the ranks stored without the status column, as an interrupted run leaves it
+  assay[["moransi.spatially.variable.rank"]] <- seq_along(features)
+  assay[["MoransI_observed"]] <- runif(length(features))
+  expect_error(
+    SVFInfo(assay, method = "moransi", status = TRUE),
+    "no 'moransi.spatially.variable' column"
+  )
+})
