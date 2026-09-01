@@ -2,6 +2,7 @@
 
 ## Changes:
 - Replace `future_mapply` with `mapply` in `RenameCells.Segmentation` for improved performance ([#294](https://github.com/satijalab/seurat-object/pull/294))
+- Adding cell-level meta data from an unnamed vector whose length is neither one nor the number of cells is now an error; it was recycled silently, so cells were given values belonging to other cells
 
 # SeuratObject 5.4.0
 
