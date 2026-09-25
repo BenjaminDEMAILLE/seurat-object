@@ -945,6 +945,13 @@ SVFInfo.Assay <- function(
     ),
     abort(message = paste("Unknown method:", sQuote(x = method)))
   )
+  if (!length(x = vars)) {
+    abort(message = paste0(
+      "Unable to find spatially variable feature information for method '",
+      method, "': the assay has no metric columns for this method. Run ",
+      "FindSpatiallyVariableFeatures(selection.method = '", method, "') first"
+    ))
+  }
   tryCatch(
     expr = svf.info <- object[[vars]],
     error = function(e) {

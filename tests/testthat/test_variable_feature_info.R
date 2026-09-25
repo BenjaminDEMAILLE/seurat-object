@@ -25,7 +25,7 @@ test_that("HVFInfo status columns are plain vectors", {
   expect_true(is.logical(info$variable))
   expect_false(is.data.frame(info$variable))
   expect_identical(sum(info$variable), 5L)
-  expect_no_error(info[order(info$variance), ])
+  expect_no_error(info[order(info$variable), ])
 })
 
 test_that("SVFInfo status columns are plain vectors and can be sorted", {
@@ -69,6 +69,15 @@ test_that("information that was never computed is reported as such", {
     SpatiallyVariableFeatures(assay, method = "moransi"),
     "Unable to find spatially variable feature information"
   )
+})
+
+test_that("SVFInfo reports missing metrics with default status", {
+  assay <- build_assay()
+  assays <- list(assay, CreateAssay5Object(counts = GetAssayData(assay, layer = "counts")))
+  for (object in assays) {
+    expect_error(SVFInfo(object, method = "moransi"), "no metric columns")
+    expect_error(SVFInfo(object, method = "markvariogram"), "Run FindSpatiallyVariableFeatures")
+  }
 })
 
 test_that("half-written information is reported as such", {
