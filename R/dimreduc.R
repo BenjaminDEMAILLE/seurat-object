@@ -480,8 +480,21 @@ Misc.DimReduc <- .Misc
 RenameCells.DimReduc <- function(object, new.names = NULL, ...) {
   CheckDots(...)
   old.data <- Embeddings(object = object)
+  old.cells <- rownames(x = old.data)
   rownames(x = old.data) <- new.names
   slot(object = object, name = "cell.embeddings") <- old.data
+  model <- Misc(object = object, slot = 'model')
+  # A stored UMAP model uses these names to align its coordinates with cells.
+  if (is.list(x = model) && !is.null(x = model$embedding) && !is.null(x = rownames(x = model$embedding))) {
+    model.cells <- rownames(x = model$embedding)
+    matched <- match(x = model.cells, table = old.cells)
+    found <- which(x = !is.na(x = matched))
+    if (length(x = found)) {
+      model.cells[found] <- rownames(x = old.data)[matched[found]]
+      rownames(x = model$embedding) <- model.cells
+      slot(object = object, name = 'misc')[['model']] <- model
+    }
+  }
   validObject(object = object)
   return(object)
 }
@@ -941,11 +954,11 @@ subset.DimReduc <- function(x, cells = NULL, features = NULL, ...) {
     return(object)
   }
   keep <- intersect(x = cells, y = rownames(x = embedding))
-  if (!length(x = keep)) {
-    return(object)
+  if (length(x = keep) != length(x = cells)) {
+    stop("Cannot align stored reduction model embedding with the reduction's cells", call. = FALSE)
   }
   model$embedding <- embedding[keep, , drop = FALSE]
-  Misc(object = object, slot = 'model') <- model
+  slot(object = object, name = 'misc')[['model']] <- model
   return(object)
 }
 
